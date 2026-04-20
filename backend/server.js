@@ -99,7 +99,8 @@ app.get('/route-suggestion', async (req, res) => {
   // Use AI module if running
   try {
     const axios = require('axios');
-    const aiRes = await axios.post('http://127.0.0.1:8000/predict-route', { start, end });
+    const AI_BASE = process.env.AI_MODULE_URL || 'http://127.0.0.1:8000';
+    const aiRes = await axios.post(`${AI_BASE}/predict-route`, { start, end });
     return res.json(aiRes.data);
   } catch (err) {
     // Fallback simple logic
