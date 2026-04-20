@@ -1,71 +1,46 @@
-# 🌍 Hosting Guide for EventSync Platform
+# 🌍 Hosting Guide for EventSync Mobile System
 
-To host this multi-module system in the cloud, follow these steps. We will use **Render** for the backend/AI and **Vercel** for the dashboard.
+To host the mobile app and its supporting services in the cloud, follow these steps. We will use **Render** for the backend/AI.
 
 ---
 
 ## 1. Database (MongoDB Atlas)
-Since your backend uses MongoDB (optional but recommended), create a free cluster:
+Your backend uses MongoDB for data persistence:
 1.  Sign up at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
-2.  Create a new Database and a User.
-3.  Get your **Connection String** (looks like `mongodb+srv://...`).
+2.  Create a free cluster and get your **Connection String**.
 
 ---
 
 ## 2. Backend Deployment (Render)
-1.  Push your code to a GitHub repository.
+1.  Push your code to GitHub.
 2.  Log in to [Render](https://render.com/).
-3.  Create a **New Web Service** and connect your repo.
-4.  **Root Directory**: `backend`
-5.  **Build Command**: `npm install`
-6.  **Start Command**: `npm run start`
-7.  **Environment Variables**:
-    *   `PORT`: `10000`
-    *   `MONGO_URI`: (Your MongoDB Atlas string)
-8.  **Note**: Once deployed, Render will give you a URL (e.g., `https://eventsync-backend.onrender.com`).
+3.  Create a **New Web Service**:
+    *   **Root Directory**: `backend`
+    *   **Build Command**: `npm install`
+    *   **Start Command**: `npm run start`
+    *   **Env Vars**: `PORT=10000`, `MONGO_URI=your_mongodb_string`
+4.  Copy your Render URL (e.g., `https://backend.onrender.com`).
 
 ---
 
 ## 3. AI Module Deployment (Render)
-1.  Create another **New Web Service** on Render.
-2.  **Root Directory**: `ai-module`
-3.  **Build Command**: `pip install -r requirements.txt`
-4.  **Start Command**: `uvicorn main:app --host 0.0.0.0 --port 10000`
-5.  **Note**: Take note of this URL (e.g., `https://eventsync-ai.onrender.com`).
+1.  Create another **New Web Service**:
+    *   **Root Directory**: `ai-module`
+    *   **Build Command**: `pip install -r requirements.txt`
+    *   **Start Command**: `uvicorn main:app --host 0.0.0.0 --port 10000`
+2.  Copy this URL (e.g., `https://ai.onrender.com`).
 
 ---
 
-## 4. Connect Backend to AI
-In your **Backend** environment variables on Render, add:
-*   `AI_MODULE_URL`: (The URL from step 3)
-
-*Note: You may need to update `backend/server.js` to use `process.env.AI_MODULE_URL` instead of the hardcoded `127.0.0.1:8000`.*
-
----
-
-## 5. Admin Dashboard Deployment (Vercel)
-1.  Log in to [Vercel](https://vercel.com/).
-2.  Connect your GitHub repo.
-3.  **Root Directory**: `admin-dashboard`
-4.  **Framework Preset**: `Vite`
-5.  **Build Command**: `npm run build`
-6.  **Output Directory**: `dist`
-7.  **Environment Variables**:
-    *   `VITE_API_URL`: (Your Backend URL from step 2)
-
----
-
-## 6. Mobile App Update
-Before building your mobile app for production:
-1.  Open `mobile-app/App.js`.
-2.  Update `API_URL` to your hosted Backend URL:
+## 4. Final Connection
+1.  **Backend Config**: On Render, add `AI_MODULE_URL` to your Backend's environment variables using the URL from Step 3.
+2.  **Mobile App Config**: Open `mobile-app/App.js` and set:
     ```javascript
-    const API_URL = 'https://eventsync-backend.onrender.com';
+    const API_URL = 'https://your-backend.onrender.com';
     ```
-3.  Use **EAS Build** to create an APK/IPA or share via Expo Go.
+3.  **Build Mobile App**:
     ```bash
-    npm install -g eas-cli
-    eas build -p android --profile preview
+    npx expo build:android # or use EAS build
     ```
 
 ---
