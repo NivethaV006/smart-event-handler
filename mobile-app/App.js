@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import io from 'socket.io-client';
 
-const API_URL = 'http://10.214.95.103:5000'; // Change to your IP if testing on real device
+const API_URL = 'https://smart-event-handler.onrender.com';
 
 const Stack = createNativeStackNavigator();
 const { width, height } = Dimensions.get('window');
